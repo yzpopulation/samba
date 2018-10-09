@@ -5,18 +5,18 @@ Known restrictions:
 - Currently no Spotlight support (since Ubuntu 18.04 comes with libtracker-sparql-2.0-dev which is not yet supported by Samba)
 
 Run container with Bash:
-docker run -v /srv/Backups/backup:/srv/backup/timemachine -v $(pwd)/smb.conf:/etc/samba/smb.conf -v $(pwd)/private:/var/lib/samba/private -p137:137 -p138:138 -$
+docker run -v /srv/Backups/backup:/srv/backup/timemachine -v /srv/samba/smb.conf:/etc/samba/smb.conf -v /srv/samba/private:/var/lib/samba/private -p137:137 -p138:138 -p139:139 -p445:445 -p5353:5353 samba:ubuntu-16.04
 
 Run container:
 docker run \
  -v /srv/Backups/backup:/srv/backup/timemachine \
- -v $(pwd)/smb.conf:/etc/samba/smb.conf \
- -v $(pwd)/private:/var/lib/samba/private \
+ -v /srv/samba/smb.conf:/etc/samba/smb.conf \
+ -v /srv/samba/private:/var/lib/samba/private \
  -v $(pwd)/passwd:/etc/passwd \
  -p137:137 -p138:138 -p139:139 -p445:445 -p5353:5353 \
  --name samba \
  -d \
- samba
+ samba:ubuntu-16.04
 
 Q&A:
 Q: Why use Samba 4.8.4 instead of the latest release?

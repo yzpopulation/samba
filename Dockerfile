@@ -1,13 +1,10 @@
-FROM ubuntu:18.04
-RUN echo 'deb-src http://archive.ubuntu.com/ubuntu/ bionic main restricted' >> /etc/apt/sources.list \
- && echo 'deb-src http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted' >> /etc/apt/sources.list 
-# && echo 'deb-src http://archive.ubuntu.com/ubuntu/ bionic universe' >> /etc/apt/sources.list \
-# && echo 'deb-src http://archive.ubuntu.com/ubuntu/ bionic-updates universe' >> /etc/apt/sources.list 
+FROM ubuntu:16.04
+RUN sed -i '/deb-src/s/^# //' /etc/apt/sources.list
 RUN apt-get update \
  && apt-get install -y wget \
  && apt remove samba \
  && apt autoremove \
- && apt install -y build-essential avahi-daemon # tracker libtracker-sparql-2.0-dev 
+ && apt install -y build-essential avahi-daemon tracker libtracker-sparql-1.0-dev
 RUN apt build-dep -y samba
 RUN mkdir ~/build \
  && cd ~/build \
@@ -21,6 +18,7 @@ RUN cd ~/build/samba-samba-4.8.4 \
     --localstatedir=/var --libdir=/usr/lib/$DEB_HOST_MULTIARCH \
     --with-privatedir=/var/lib/samba/private \
     --with-smbpasswd-file=/etc/samba/smbpasswd \
+   --enable-spotlight \
     --enable-fhs \
  && make -j$(nproc) \
  && make install 
