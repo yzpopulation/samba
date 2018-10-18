@@ -1,11 +1,14 @@
-Samba version 4.8.4 with Time Machine capabilities
+Samba version 4.8.6 with Time Machine capabilities
 Based on ubuntu:18.04
 
 Known restrictions:
 - Currently no Spotlight support (since Ubuntu 18.04 comes with libtracker-sparql-2.0-dev which is not yet supported by Samba)
 
+Build image: 
+docker build . -t samba:4.8.4-ubuntu-18.04
+
 Run container with Bash:
-docker run -v /srv/Backups/backup:/srv/backup/timemachine -v /srv/samba/smb.conf:/etc/samba/smb.conf -v /srv/samba/private:/var/lib/samba/private -p137:137 -p138:138 -p139:139 -p445:445 -p5353:5353 samba:ubuntu-18.04
+docker run -v /srv/Backups/backup:/srv/backup/timemachine -v /srv/samba/smb.conf:/etc/samba/smb.conf -v /srv/samba/private:/var/lib/samba/private -p137:137 -p138:138 -p139:139 -p445:445 -p5353:5353 samba:4.8.6-ubuntu-18.04
 
 Run container:
 docker run \
@@ -17,11 +20,7 @@ docker run \
  -p137:137 -p138:138 -p139:139 -p445:445 -p5353:5353 \
  --name samba \
  -d \
- samba:ubuntu-18.04
-
-Q&A:
-Q: Why use Samba 4.8.4 instead of the latest release?
-A: There is a bug in Samba version 4.8.5 (which is the latest release as of this writing) that prevents consistent Time Machine backups. Details: https://www.spinics.net/lists/samba/msg152237.html
+ samba:4.8.6-ubuntu-18.04
 
 Articles: 
 https://www.reddit.com/r/homelab/comments/83vkaz/howto_make_time_machine_backups_on_a_samba/
