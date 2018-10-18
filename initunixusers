@@ -1,6 +1,6 @@
 #!/bin/bash
 startid=1000
-for u in $(pdbedit -L); do 
+for u in $(pdbedit -L -d0); do 
   #echo $u
   username=$(echo $u |awk -F ':' '{print $1}')
   userid=$(echo $u |awk -F ':' '{print $2}')

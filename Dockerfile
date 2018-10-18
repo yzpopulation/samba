@@ -1,11 +1,20 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 RUN sed -i '/deb-src/s/^# //' /etc/apt/sources.list
 RUN apt-get update \
  && apt-get install -y wget \
  && apt remove samba \
- && apt autoremove \
- && apt install -y build-essential avahi-daemon tracker libtracker-sparql-1.0-dev
-RUN apt build-dep -y samba
+ && apt autoremove 
+# && apt install -y build-essential avahi-daemon tracker libtracker-sparql-1.0-dev
+RUN DEBIAN_FRONTEND=noninteractive apt-get -qy install acl attr autoconf bind9utils bison build-essential \
+  debhelper dnsutils docbook-xml docbook-xsl flex gdb libjansson-dev krb5-user \
+  libacl1-dev libaio-dev libarchive-dev libattr1-dev libblkid-dev libbsd-dev \
+  libcap-dev libcups2-dev libgnutls28-dev libgpgme-dev libjson-perl \
+  libldap2-dev libncurses5-dev libpam0g-dev libparse-yapp-perl \
+  libpopt-dev libreadline-dev nettle-dev perl perl-modules pkg-config \
+  python-all-dev python-crypto python-dbg python-dev python-dnspython \
+  python3-dnspython python-gpg python3-gpg python-markdown python3-markdown \
+  python3-dev xsltproc zlib1g-dev liblmdb-dev lmdb-utils
+#RUN apt build-dep -y samba
 RUN mkdir ~/build \
  && cd ~/build \
  && wget --content-disposition https://github.com/samba-team/samba/archive/samba-4.8.4.tar.gz
@@ -18,7 +27,6 @@ RUN cd ~/build/samba-samba-4.8.4 \
     --localstatedir=/var --libdir=/usr/lib/$DEB_HOST_MULTIARCH \
     --with-privatedir=/var/lib/samba/private \
     --with-smbpasswd-file=/etc/samba/smbpasswd \
-   --enable-spotlight \
     --enable-fhs \
  && make -j$(nproc) \
  && make install 
