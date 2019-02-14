@@ -8,9 +8,12 @@ Build image:
 docker build . -t samba:4.8.6-ubuntu-18.04
 
 Run container with Bash:
+```bash
 docker run -v /srv/Backups/backup:/srv/backup/timemachine -v /srv/samba/smb.conf:/etc/samba/smb.conf -v /srv/samba/private:/var/lib/samba/private -p137:137 -p138:138 -p139:139 -p445:445 -p5353:5353 samba:4.8.6-ubuntu-18.04
+```
 
 Run container:
+```bash
 docker run \
  -v /srv/Backups/backup:/srv/backup/timemachine \
  -v /srv:/srv/other \
@@ -21,6 +24,7 @@ docker run \
  --name samba \
  -d \
  samba:4.8.6-ubuntu-18.04
+ ```
 
 Articles: 
 https://www.reddit.com/r/homelab/comments/83vkaz/howto_make_time_machine_backups_on_a_samba/
