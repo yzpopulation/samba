@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:18.10
 RUN sed -i '/deb-src/s/^# //' /etc/apt/sources.list
 RUN apt-get update \
  && apt-get install -y wget \
@@ -17,10 +17,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -qy install acl attr autoconf bind9ut
 #RUN apt build-dep -y samba
 RUN mkdir ~/build \
  && cd ~/build \
- && wget --content-disposition https://github.com/samba-team/samba/archive/samba-4.8.6.tar.gz
+ && wget --content-disposition https://github.com/samba-team/samba/archive/samba-4.10.3.tar.gz
 RUN cd ~/build \
- && tar xvfz samba-samba-4.8.6.tar.gz
-RUN cd ~/build/samba-samba-4.8.6 \
+ && tar xvfz samba-samba-4.10.3.tar.gz
+RUN cd ~/build/samba-samba-4.10.3 \
  && DEB_HOST_MULTIARCH=$(dpkg-architecture -qDEB_HOST_MULTIARCH) \
  && ./configure \
     --prefix=/usr --exec-prefix=/usr --sysconfdir=/etc \

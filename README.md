@@ -1,12 +1,12 @@
-# Samba Version 4.8.6 with Time Machine capabilities
-Based on ubuntu:18.04
+# Samba Version 4.10.3 with Time Machine capabilities
+Based on ubuntu:18.10
 
 Known restrictions:
 - Currently no Spotlight support (since Ubuntu 18.04 comes with libtracker-sparql-2.0-dev which is not yet supported by Samba)
 
 Build image: 
 ```bash
-docker build . -t samba:4.8.6-ubuntu-18.04
+docker build . -t samba:4.10.3-ubuntu-18.10
 ```
 
 Run container with Bash:
@@ -25,7 +25,7 @@ docker run \
  -p137:137 -p138:138 -p139:139 -p445:445 -p5353:5353 \
  --name samba \
  -d \
- samba:4.8.6-ubuntu-18.04
+ samba:4.10.3-ubuntu-18.10
  ```
 
 Articles: 
