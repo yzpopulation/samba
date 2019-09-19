@@ -19,8 +19,8 @@ RUN mkdir ~/build \
  && cd ~/build \
  && wget --content-disposition https://github.com/samba-team/samba/archive/samba-4.11.0.tar.gz
 RUN cd ~/build \
- && tar xvfz samba-samba-4.10.3.tar.gz
-RUN cd ~/build/samba-samba-4.10.3 \
+ && tar xvfz samba-samba-4.11.0.tar.gz
+RUN cd ~/build/samba-samba-4.11.0 \
  && DEB_HOST_MULTIARCH=$(dpkg-architecture -qDEB_HOST_MULTIARCH) \
  && ./configure \
     --prefix=/usr --exec-prefix=/usr --sysconfdir=/etc \
