@@ -2,7 +2,7 @@
 Based on ubuntu:18.10
 
 Known restrictions:
-- Currently no Spotlight support (since Ubuntu 18.04 comes with libtracker-sparql-2.0-dev which is not yet supported by Samba)
+- Currently no Spotlight support (since Ubuntu 18.10 comes with libtracker-sparql-2.0-dev which is not yet supported by Samba)
 
 Build image: 
 ```bash
