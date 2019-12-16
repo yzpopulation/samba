@@ -1,4 +1,4 @@
-# Samba Version 4.11.3 with Time Machine capabilities
+# Samba Version 4.11.4 with Time Machine capabilities
 Based on ubuntu:18.10
 
 Known restrictions:
@@ -6,7 +6,7 @@ Known restrictions:
 
 Build image: 
 ```bash
-docker build . -t samba:4.11.3-ubuntu-18.10
+docker build . -t samba:4.11.4-ubuntu-18.10
 ```
 
 Run container with Bash:
@@ -25,7 +25,7 @@ docker run \
  -p137:137 -p138:138 -p139:139 -p445:445 -p5353:5353 \
  --name samba \
  -d \
- samba:4.11.3-ubuntu-18.10
+ samba:4.11.4-ubuntu-18.10
  ```
 
 Articles: 
