@@ -1,4 +1,4 @@
-# Samba Version 4.11.5 with Time Machine capabilities
+# Samba Version 4.12.0 with Time Machine capabilities
 Based on ubuntu:18.10
 
 Known restrictions:
@@ -6,12 +6,12 @@ Known restrictions:
 
 Build image: 
 ```bash
-docker build . -t samba:4.11.5-ubuntu-18.10
+docker build . -t samba:4.12.0-ubuntu-18.10
 ```
 
 Run container with Bash:
 ```bash
-docker run -v /srv/Backups/backup:/srv/backup/timemachine -v /srv/samba/smb.conf:/etc/samba/smb.conf -v /srv/samba/private:/var/lib/samba/private -p137:137 -p138:138 -p139:139 -p445:445 -p5353:5353 samba:4.8.6-ubuntu-18.04
+docker run -v /srv/Backups/backup:/srv/backup/timemachine -v /srv/samba/smb.conf:/etc/samba/smb.conf -v /srv/samba/private:/var/lib/samba/private -p137:137 -p138:138 -p139:139 -p445:445 -p5353:5353 samba:4.12.0-ubuntu-18.04
 ```
 
 Run container:
@@ -25,7 +25,7 @@ docker run \
  -p137:137 -p138:138 -p139:139 -p445:445 -p5353:5353 \
  --name samba \
  -d \
- samba:4.11.5-ubuntu-18.10
+ samba:4.12.0-ubuntu-18.10
  ```
 
 Articles: 
