@@ -1,11 +1,11 @@
 # Samba Version 4.12.0 with Time Machine capabilities
-Based on ubuntu:18.10
+Based on ubuntu:19.10
 
 ### Build
 
 #### Build image: 
 ```bash
-docker build . -t kune/samba:4.12.0-ubuntu-18.10
+docker build . -t kune/samba:4.12.0-ubuntu-19.10
 ```
 
 ### Run
@@ -105,5 +105,5 @@ To make the shares discoverable for Macs and available for backups the avahi-dae
 - https://kirb.me/2018/03/24/using-samba-as-a-time-machine-network-server.html
 
 #### Known restrictions:
-- Currently no Spotlight support (since Ubuntu 18.10 comes with libtracker-sparql-2.0-dev which is not yet supported by Samba)
+- Currently no Spotlight support (since Ubuntu 19.10 comes with libtracker-sparql-2.0-dev which is not yet supported by Samba)
 
