@@ -17,10 +17,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -qy install acl attr autoconf bind9ut
 #RUN apt build-dep -y samba
 RUN mkdir ~/build \
  && cd ~/build \
- && wget --content-disposition https://github.com/samba-team/samba/archive/samba-4.12.0.tar.gz
+ && wget --content-disposition https://github.com/samba-team/samba/archive/samba-4.12.2.tar.gz
 RUN cd ~/build \
- && tar xvfz samba-samba-4.12.0.tar.gz
-RUN cd ~/build/samba-samba-4.12.0 \
+ && tar xvfz samba-samba-4.12.2.tar.gz
+RUN cd ~/build/samba-samba-4.12.2 \
  && DEB_HOST_MULTIARCH=$(dpkg-architecture -qDEB_HOST_MULTIARCH) \
  && ./configure \
     --prefix=/usr --exec-prefix=/usr --sysconfdir=/etc \
