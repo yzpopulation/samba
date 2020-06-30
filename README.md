@@ -1,11 +1,11 @@
-# Samba Version 4.12.2 with Time Machine capabilities
+# Samba Version 4.12.3 with Time Machine capabilities
 Based on ubuntu:19.10
 
 ### Build
 
 #### Build image: 
 ```bash
-docker build . -t kune/samba:4.12.2-ubuntu-19.10
+docker build . -t kune/samba:4.12.3-ubuntu-19.10
 ```
 
 ### Run
