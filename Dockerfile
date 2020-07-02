@@ -14,13 +14,13 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -qy install acl attr autoconf bind9ut
   python-all-dev python-crypto python-dbg python-dev python-dnspython \
   python3-dnspython python-gpg python3-gpg python-markdown python3-markdown \
   python3-dev xsltproc zlib1g-dev liblmdb-dev lmdb-utils
-#RUN apt build-dep -y samba
+ENV SAMBA_VERSION=4.12.4
 RUN mkdir ~/build \
  && cd ~/build \
- && wget --content-disposition https://github.com/samba-team/samba/archive/samba-4.12.3.tar.gz
+ && wget --content-disposition https://github.com/samba-team/samba/archive/samba-$SAMBA_VERSION.tar.gz
 RUN cd ~/build \
- && tar xvfz samba-samba-4.12.3.tar.gz
-RUN cd ~/build/samba-samba-4.12.3 \
+ && tar xvfz samba-samba-$SAMBA_VERSION.tar.gz
+RUN cd ~/build/samba-samba-$SAMBA_VERSION \
  && DEB_HOST_MULTIARCH=$(dpkg-architecture -qDEB_HOST_MULTIARCH) \
  && ./configure \
     --prefix=/usr --exec-prefix=/usr --sysconfdir=/etc \
