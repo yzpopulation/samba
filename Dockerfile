@@ -14,7 +14,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -qy install acl attr autoconf bind9ut
   python-all-dev python-crypto python-dbg python-dev python-dnspython \
   python3-dnspython python-gpg python3-gpg python-markdown python3-markdown \
   python3-dev xsltproc zlib1g-dev liblmdb-dev lmdb-utils
-ENV SAMBA_VERSION=4.12.4
+ENV SAMBA_VERSION=4.12.5
 RUN mkdir ~/build \
  && cd ~/build \
  && wget --content-disposition https://github.com/samba-team/samba/archive/samba-$SAMBA_VERSION.tar.gz
