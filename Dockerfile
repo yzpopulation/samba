@@ -19,12 +19,7 @@ RUN cd ~/build/samba-$SAMBA_VERSION \
     --enable-fhs \
  && make -j$(nproc) \
  && make install 
-#RUN systemctl daemon-reload \
-# && systemctl enable {nmb,smb,winbind}.service \
-# && systemctl start {nmb,smb,winbind}.service
 COPY initunixusers /initunixusers
 COPY entrypoint /entrypoint
 ENTRYPOINT ["/entrypoint"]
 CMD ["tail -F /var/log/samba/log*"]
-# && DEB_HOST_MULTIARCH=$(dpkg-architecture -qDEB_HOST_MULTIARCH) \
-# --libdir=/usr/lib/$DEB_HOST_MULTIARCH \
