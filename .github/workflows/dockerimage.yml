@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: git fetch --tags && docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASSWORD }} && docker build . -t kune/samba:latest && for tag in $(git tag -l --points-at HEAD); do docker tag kune/samba:latest kune/samba:$tag; done && git tag kune/samba:latest kune/samba:$(git rev-parse --short HEAD) && docker push kune/samba
+      run: git fetch --tags && docker login -u ${{ secrets.DOCKER_HUB_USER }} -p ${{ secrets.DOCKER_HUB_PASSWORD }} && docker build . -t kune/samba:latest && for tag in $(git tag -l --points-at HEAD); do docker tag kune/samba:latest kune/samba:$tag; done && docker tag kune/samba:latest kune/samba:$(git rev-parse --short HEAD) && docker push kune/samba
