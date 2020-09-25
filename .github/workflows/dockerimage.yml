@@ -10,7 +10,7 @@ jobs:
 
   build:
 
-    runs-on: [Linux, X64, X86]
+    runs-on: X86
 
     steps:
     - uses: actions/checkout@v2
