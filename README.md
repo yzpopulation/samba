@@ -1,11 +1,11 @@
-# Samba Version 4.13.0 with Time Machine capabilities
+# Samba Version 4.13.4 with Time Machine capabilities
 Based on centos:8
 
 ### Build
 
 #### Build image: 
 ```bash
-docker build . -t kune/samba:4.13.0-centos8
+docker build . -t kune/samba:4.13.4-centos8
 ```
 
 ### Run
@@ -105,5 +105,7 @@ To make the shares discoverable for Macs and available for backups the avahi-dae
 - https://kirb.me/2018/03/24/using-samba-as-a-time-machine-network-server.html
 
 #### Known restrictions:
-- Currently no Spotlight support (since Ubuntu 19.10 comes with libtracker-sparql-2.0-dev which is not yet supported by Samba)
+- Currently no Spotlight support
 
+#### Dependencies
+- The bootstrap.sh file originates from https://wiki.samba.org/index.php/Package_Dependencies_Required_to_Build_Samba#Verified_Package_Dependencies
