@@ -22,7 +22,7 @@ EXPOSE 139 445
 
 COPY . /container/
 
-HEALTHCHECK CMD ["/container/scripts/docker-healthcheck.sh"]
-ENTRYPOINT ["/container/scripts/entrypoint.sh"]
+HEALTHCHECK CMD ["sh","/container/scripts/docker-healthcheck.sh"]
+ENTRYPOINT ["sh","/container/scripts/entrypoint.sh"]
 
 CMD [ "runsvdir","-P", "/container/config/runit" ]
