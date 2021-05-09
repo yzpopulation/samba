@@ -33,3 +33,6 @@ jobs:
       - name: Run a multi-line script
         run: |
           docker build .
+      - name: list docker images
+        run: |
+          docker images
