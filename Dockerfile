@@ -1,6 +1,6 @@
 FROM alpine
 
-RUN apk add --no-cache wget tar make gcc python3 gdb git uname 
+RUN apk add --no-cache wget tar make gcc python3 gdb git  
 
 ENV SAMBA_VERSION=4.14.4
 RUN mkdir ~/build \
