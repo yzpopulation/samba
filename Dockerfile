@@ -7,7 +7,7 @@ RUN mkdir ~/build \
  && cd ~/build \
  && wget --content-disposition https://download.samba.org/pub/samba/stable/samba-$SAMBA_VERSION.tar.gz
 RUN cd ~/build \
- && tar xvfz samba-$SAMBA_VERSION.tar.gz
+ && tar xfz samba-$SAMBA_VERSION.tar.gz
 RUN cd ~/build/samba-$SAMBA_VERSION \
  && ./configure \
     --libdir=/usr/lib64 \
