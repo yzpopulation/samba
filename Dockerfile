@@ -1,6 +1,6 @@
 FROM alpine
 
-RUN apk add --no-cache wget tar make gcc
+RUN apk add --no-cache wget tar make gcc python3
 
 ENV SAMBA_VERSION=4.14.4
 RUN mkdir ~/build \
@@ -10,7 +10,6 @@ RUN cd ~/build \
  && tar xvfz samba-$SAMBA_VERSION.tar.gz
 RUN cd ~/build/samba-$SAMBA_VERSION \
  && ./configure \
-    --disable-python --without-ad-dc \
     --libdir=/usr/lib64 \
     --prefix=/usr --exec-prefix=/usr --sysconfdir=/etc \
     --localstatedir=/var \
