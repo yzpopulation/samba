@@ -30,13 +30,13 @@ jobs:
         run: echo "::set-output name=date::$(date +'%Y%m%d%H%M%S')"
       - name: Run a multi-line script
         run: |
-          buildah bud -t mydocker/${{ steps.date.outputs.date }} .
+          docker build . -t mydocker/${{ steps.date.outputs.date }} 
       - name: list docker images
         run: |
-          buildah images
-      - name: list docker images
-        run: |
-          buildah push localhost/mydocker/${{ steps.date.outputs.date }} docker-daemon:mydocker/${{ steps.date.outputs.date }}:latest
+          docker images
+      # - name: list docker images
+      #   run: |
+      #     buildah push localhost/mydocker/${{ steps.date.outputs.date }} docker-daemon:mydocker/${{ steps.date.outputs.date }}:latest
       - name: save docker images
         run: |
           docker save -o docker${{ steps.date.outputs.date }}.tar.gz mydocker/${{ steps.date.outputs.date }}
