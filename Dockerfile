@@ -10,6 +10,7 @@ RUN cd ~/build \
  && tar xvfz samba-$SAMBA_VERSION.tar.gz
 RUN cd ~/build/samba-$SAMBA_VERSION \
  && ./configure \
+    --disable-python --without-ad-dc \
     --libdir=/usr/lib64 \
     --prefix=/usr --exec-prefix=/usr --sysconfdir=/etc \
     --localstatedir=/var \
