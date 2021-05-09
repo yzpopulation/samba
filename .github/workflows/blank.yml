@@ -36,7 +36,7 @@ jobs:
           buildah images
       - name: list docker images
         run: |
-          buildah push localhost/mydocker/${{ steps.date.outputs.date }} docker-daemon:mydocker/${{ steps.date.outputs.date }}
+          buildah push localhost/mydocker/${{ steps.date.outputs.date }} docker-daemon:mydocker/${{ steps.date.outputs.date }}:latest
       - name: save docker images
         run: |
           docker save -o docker${{ steps.date.outputs.date }}.tar.gz mydocker/${{ steps.date.outputs.date }}
