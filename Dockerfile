@@ -1,7 +1,6 @@
-FROM centos:8
+FROM alpine
 
-COPY bootstrap.sh /bootstrap.sh
-RUN sh /bootstrap.sh
+RUN apk add --no-cache wget tar make gcc
 
 ENV SAMBA_VERSION=4.14.4
 RUN mkdir ~/build \
