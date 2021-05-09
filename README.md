@@ -1,109 +1,162 @@
-# samba - (servercontainers/samba) [x86 + arm]
+[![logo](https://raw.githubusercontent.com/dperson/samba/master/logo.jpg)](https://www.samba.org)
 
-samba on alpine
+# Samba
 
-## Changelogs
+Samba docker container
 
-* 2021-03-16
-    * added support for specifing the `uid` for each `ACCOUNT_` using `UID_username=1234214` env.
-* 2021-03-09
-    * updated healthcheck to work with external avahi server
-* 2020-12-22
-    * added support for samba password hashes instead of just plaintext passwords
-* 2020-12-10
-    * added Timemachine Multiuser Support (samba config path needs to end with `%U`)
-* 2020-12-09
-    * bug fix: `</service-group>` gets removed with multiple timemachine volumes
-* 2020-11-08
-    * fixed samba user creation
-    * custom avahi service name
-* 2020-11-05
-    * multiarch build
-    * rewrite from debian to alpine
-    * enhanced timemachine support
+# What is Samba?
 
-## Info
+Since 1992, Samba has provided secure, stable and fast file and print services
+for all clients using the SMB/CIFS protocol, such as all versions of DOS and
+Windows, OS/2, Linux and many others.
 
-This is a Samba Server Container running on `_/alpine`.
+# How to use this image
 
-## Environment variables and defaults
+By default there are no shares configured, additional ones can be added.
 
-### Samba
+## Hosting a Samba instance
 
-*  __SAMBA\_GLOBAL\_CONFIG\_someuniquevalue__
-    * add any global samba config to `smb.conf`
-    * example value: `key = value`
+    sudo docker run -it -p 139:139 -p 445:445 -d dperson/samba -p
 
-* __ACCOUNT\_username__
-    * multiple variables/accounts possible
-    * adds a new user account with the given username and the env value as password or samba hash
-        * either you add a simple plaintext password as value (can't start with `:`username`:[0-9]*:` or it will be detected as hash)
-        * to add a samba hash e.g. `user:1002:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:8846F7EAEE8FB117AD06BDD830B7586C:[U          ]:LCT-5FE1F7DF:` (user: `user` / password: `password`) add the line from `/var/lib/samba/private/smbpasswd`
-        * create hash using this command `docker run -ti --rm --entrypoint create-hash.sh servercontainers/samba`
-    * to restrict access of volumes you can add the following to your samba volume config:
-        * `valid users = alice; invalid users = bob;`
+OR set local storage:
 
-* __UID\_username__
-    * optional
-    * specify the `uid` explicitly for each user account.
-    * the `username` part must match to a specified `ACCOUNT_username` environment variable
+    sudo docker run -it --name samba -p 139:139 -p 445:445 \
+                -v /path/to/directory:/mount \
+                -d dperson/samba -p
 
-* __MODEL__
-    * _optional_ model value of avahi samba service
-    * _default:_ `TimeCapsule`
-    * some available options are Xserve, PowerBook, PowerMac, Macmini, iMac, MacBook, MacBookPro, MacBookAir, MacPro, MacPro6,1, TimeCapsule, AppleTV1,1 and AirPort.
+## Configuration
 
-* __AVAHI\_NAME__
-    * _optional_ name of avahi samba service
-    * _default:_ _hostname_
+    sudo docker run -it --rm dperson/samba -h
+    Usage: samba.sh [-opt] [command]
+    Options (fields in '[]' are optional, '<>' are required):
+        -h          This help
+        -c "<from:to>" setup character mapping for file/directory names
+                    required arg: "<from:to>" character mappings separated by ','
+        -G "<section;parameter>" Provide generic section option for smb.conf
+                    required arg: "<section>" - IE: "share"
+                    required arg: "<parameter>" - IE: "log level = 2"
+        -g "<parameter>" Provide global option for smb.conf
+                    required arg: "<parameter>" - IE: "log level = 2"
+        -i "<path>" Import smbpassword
+                    required arg: "<path>" - full file path in container
+        -n          Start the 'nmbd' daemon to advertise the shares
+        -p          Set ownership and permissions on the shares
+        -r          Disable recycle bin for shares
+        -S          Disable SMB2 minimum version
+        -s "<name;/path>[;browse;readonly;guest;users;admins;writelist;comment]"
+                    Configure a share
+                    required arg: "<name>;</path>"
+                    <name> is how it's called for clients
+                    <path> path to share
+                    NOTE: for the default values, just leave blank
+                    [browsable] default:'yes' or 'no'
+                    [readonly] default:'yes' or 'no'
+                    [guest] allowed default:'yes' or 'no'
+                    NOTE: for user lists below, usernames are separated by ','
+                    [users] allowed default:'all' or list of allowed users
+                    [admins] allowed default:'none' or list of admin users
+                    [writelist] list of users that can write to a RO share
+                    [comment] description of share
+        -u "<username;password>[;ID;group;GID]"       Add a user
+                    required arg: "<username>;<passwd>"
+                    <username> for user
+                    <password> for user
+                    [ID] for user
+                    [group] for user
+                    [GID] for group
+        -w "<workgroup>"       Configure the workgroup (domain) samba should use
+                    required arg: "<workgroup>"
+                    <workgroup> for samba
+        -W          Allow access wide symbolic links
+        -I          Add an include option at the end of the smb.conf
+                    required arg: "<include file path>"
+                    <include file path> in the container, e.g. a bind mount
 
-* __SAMBA\_CONF\_WORKGROUP__
-    * default: _WORKGROUP_
+    The 'command' (if provided and valid) will be run instead of samba
 
-* __SAMBA\_CONF\_SERVER\_STRING__
-    * default: _Samba Server_
+ENVIRONMENT VARIABLES
 
-* __SAMBA\_CONF\_MAP_TO_GUEST__
-    * default: _Bad User_
+ * `CHARMAP` - As above, configure character mapping
+ * `GENERIC` - As above, configure a generic section option (See NOTE3 below)
+ * `GLOBAL` - As above, configure a global option (See NOTE3 below)
+ * `IMPORT` - As above, import a smbpassword file
+ * `NMBD` - As above, enable nmbd
+ * `PERMISSIONS` - As above, set file permissions on all shares
+ * `RECYCLE` - As above, disable recycle bin
+ * `SHARE` - As above, setup a share (See NOTE3 below)
+ * `SMB` - As above, disable SMB2 minimum version
+ * `TZ` - Set a timezone, IE `EST5EDT`
+ * `USER` - As above, setup a user (See NOTE3 below)
+ * `WIDELINKS` - As above, allow access wide symbolic links
+ * `WORKGROUP` - As above, set workgroup
+ * `USERID` - Set the UID for the samba server's default user (smbuser)
+ * `GROUPID` - Set the GID for the samba server's default user (smbuser)
+ * `INCLUDE` - As above, add a smb.conf include
 
-* __SAMBA\_VOLUME\_CONFIG\_myconfigname__
-    * adds a new samba volume configuration
-    * multiple variables/confgurations possible by adding unique configname to SAMBA_VOLUME_CONFIG_
-    * take a look at https://wiki.samba.org/index.php/Configure_Samba_to_Work_Better_with_Mac_OS_X -> EXPLANATION OF VOLUME PARAMETERS
-    * for timemachine only add `fruit:time machine = yes` and all other needed settings are automatically added
-        * you can also use `fruit:time machine max size = 500G;` to limit max size of time machine volume
-        * if your path variable ends with `%U` e.g. `path = /shares/timemachine/%U;` multi user mode gets activated and each user gets their own subdirectory for their own share.
+**NOTE**: if you enable nmbd (via `-n` or the `NMBD` environment variable), you
+will also want to expose port 137 and 138 with `-p 137:137/udp -p 138:138/udp`.
 
-### Volumes
+**NOTE2**: there are reports that `-n` and `NMBD` only work if you have the
+container configured to use the hosts network stack.
 
-* __your shares__
-    * by default I recommend mounting all shares beneath `/shares` and configure them using the `path` property
+**NOTE3**: optionally supports additional variables starting with the same name,
+IE `SHARE` also will work for `SHARE2`, `SHARE3`... `SHAREx`, etc.
 
-* __/external/avahi__
-    * mount your avahi service folder e.g. `/etc/avahi/services/` to this spot
-    * the container now maintains the service file `samba.service` for you - __it will be overwritten!__
-    * when mounted, the internal avahi daemon will be disabled
+## Examples
 
+Any of the commands can be run at creation with `docker run` or later with
+`docker exec -it samba samba.sh` (as of version 1.3 of docker).
 
-## Some helpful indepth informations about TimeMachine and Avahi / Zeroconf 
+### Setting the Timezone
 
-### General Infos
+    sudo docker run -it -e TZ=EST5EDT -p 139:139 -p 445:445 -d dperson/samba -p
 
-- Samba
-    - https://github.com/willtho89/docker-samba-timemachine/
-    - https://github.com/sp00ls/SambaConfigs very interessting multi user timemachine setup
-    - https://wiki.samba.org/index.php/Configure_Samba_to_Work_Better_with_Mac_OS_X
-    - https://serverfault.com/questions/1010822/samba4-issues-with-time-machine-cannot-create-new-backup-on-samba-share
+### Start an instance creating users and shares:
 
-- Avahi
-    - https://openwrt.org/docs/guide-user/services/nas/samba_configuration#zeroconf_advertising
-    - http://samba.sourceforge.net/wiki/index.php/Bonjour_record_adisk_adVF_values
-    - https://linux.die.net/man/5/avahi.service
+    sudo docker run -it -p 139:139 -p 445:445 -d dperson/samba -p \
+                -u "example1;badpass" \
+                -u "example2;badpass" \
+                -s "public;/share" \
+                -s "users;/srv;no;no;no;example1,example2" \
+                -s "example1 private share;/example1;no;no;no;example1" \
+                -s "example2 private share;/example2;no;no;no;example2"
 
+# User Feedback
 
-You can't proxy the zeroconf inside the container to the outside, since this would need routing and forwarding to your internal docker0 interface from outside.
-So you need to use the `network=host` mode to enable zeroconf from within the container
+## Troubleshooting
 
-You can just expose the needed Port 548 to the docker hosts port and install avahi.
-After that just add a new service which fits to your config.
+* You get the error `Access is denied` (or similar) on the client and/or see
+`change_to_user_internal: chdir_current_service() failed!` in the container
+logs.
 
+Add the `-p` option to the end of your options to the container, or set the
+`PERMISSIONS` environment variable.
+
+    sudo docker run -it --name samba -p 139:139 -p 445:445 \
+                -v /path/to/directory:/mount \
+                -d dperson/samba -p
+
+If changing the permissions of your files is not possible in your setup you
+can instead set the environment variables `USERID` and `GROUPID` to the
+values of the owner of your files.
+
+* High memory usage by samba. Multiple people have reported high memory usage
+that's never freed by the samba processes. Recommended work around below:
+
+Add the `-m 512m` option to docker run command, or `mem_limit:` in
+docker_compose.yml files, IE:
+
+    sudo docker run -it --name samba -m 512m -p 139:139 -p 445:445 \
+                -v /path/to/directory:/mount \
+                -d dperson/samba -p
+
+* Attempting to connect with the `smbclient` commandline tool. By default samba
+still tries to use SMB1, which is depriciated and has security issues. This
+container defaults to SMB2, which for no decernable reason even though it's
+supported is disabled by default so run the command as `smbclient -m SMB3`, then
+any other options you would specify.
+
+## Issues
+
+If you have any problems with or questions about this image, please contact me
+through a [GitHub issue](https://github.com/dperson/samba/issues).
