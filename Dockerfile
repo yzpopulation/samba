@@ -55,7 +55,8 @@ RUN apk --no-cache --no-progress upgrade && \
     echo '   fruit:veto_appledouble = no' >>$file && \
     echo '   fruit:wipe_intentionally_left_blank_rfork = yes' >>$file && \
     echo '' >>$file && \
-    rm -rf /tmp/* 
+    rm -rf /tmp/* \
+    chmod 0777 /usr/bin/samba.sh
 
 
 EXPOSE 137/udp 138/udp 139 445
