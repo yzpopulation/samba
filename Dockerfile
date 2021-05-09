@@ -1,70 +1,27 @@
-FROM alpine
-MAINTAINER David Personette <dperson@gmail.com>
+FROM fedora:35
 
-# Install samba
-RUN apk --no-cache --no-progress upgrade && \
-    apk --no-cache --no-progress add bash samba shadow tini tzdata && \
-    addgroup -S smb && \
-    adduser -S -D -H -h /tmp -s /sbin/nologin -G smb -g 'Samba User' smbuser &&\
-    file="/etc/samba/smb.conf" && \
-    sed -i 's|^;* *\(log file = \).*|   \1/dev/stdout|' $file && \
-    sed -i 's|^;* *\(load printers = \).*|   \1no|' $file && \
-    sed -i 's|^;* *\(printcap name = \).*|   \1/dev/null|' $file && \
-    sed -i 's|^;* *\(printing = \).*|   \1bsd|' $file && \
-    sed -i 's|^;* *\(unix password sync = \).*|   \1no|' $file && \
-    sed -i 's|^;* *\(preserve case = \).*|   \1yes|' $file && \
-    sed -i 's|^;* *\(short preserve case = \).*|   \1yes|' $file && \
-    sed -i 's|^;* *\(default case = \).*|   \1lower|' $file && \
-    sed -i '/Share Definitions/,$d' $file && \
-    echo '   pam password change = yes' >>$file && \
-    echo '   map to guest = bad user' >>$file && \
-    echo '   usershare allow guests = yes' >>$file && \
-    echo '   create mask = 0664' >>$file && \
-    echo '   force create mode = 0664' >>$file && \
-    echo '   directory mask = 0775' >>$file && \
-    echo '   force directory mode = 0775' >>$file && \
-    echo '   force user = smbuser' >>$file && \
-    echo '   force group = smb' >>$file && \
-    echo '   follow symlinks = yes' >>$file && \
-    echo '   load printers = no' >>$file && \
-    echo '   printing = bsd' >>$file && \
-    echo '   printcap name = /dev/null' >>$file && \
-    echo '   disable spoolss = yes' >>$file && \
-    echo '   strict locking = no' >>$file && \
-    echo '   aio read size = 0' >>$file && \
-    echo '   aio write size = 0' >>$file && \
-    echo '   vfs objects = catia fruit recycle streams_xattr' >>$file && \
-    echo '   recycle:keeptree = yes' >>$file && \
-    echo '   recycle:maxsize = 0' >>$file && \
-    echo '   recycle:repository = .deleted' >>$file && \
-    echo '   recycle:versions = yes' >>$file && \
-    echo '' >>$file && \
-    echo '   # Security' >>$file && \
-    echo '   client ipc max protocol = SMB3' >>$file && \
-    echo '   client ipc min protocol = SMB2_10' >>$file && \
-    echo '   client max protocol = SMB3' >>$file && \
-    echo '   client min protocol = SMB2_10' >>$file && \
-    echo '   server max protocol = SMB3' >>$file && \
-    echo '   server min protocol = SMB2_10' >>$file && \
-    echo '' >>$file && \
-    echo '   # Time Machine' >>$file && \
-    echo '   fruit:delete_empty_adfiles = yes' >>$file && \
-    echo '   fruit:time machine = yes' >>$file && \
-    echo '   fruit:veto_appledouble = no' >>$file && \
-    echo '   fruit:wipe_intentionally_left_blank_rfork = yes' >>$file && \
-    echo '' >>$file && \
-    rm -rf /tmp/*
+RUN dnf install -y samba
 
-COPY samba.sh /usr/bin/
+ADD createUsers.sh /etc/supervisor/createUsers.sh
+ADD smb.conf /etc/samba/smb.conf
+ADD smbd.service /etc/systemd/system/smbd.service
 
-RUN chmod 0777 /usr/bin/samba.sh
+RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
+systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+rm -f /lib/systemd/system/multi-user.target.wants/*;\
+rm -f /etc/systemd/system/*.wants/*;\
+rm -f /lib/systemd/system/local-fs.target.wants/*; \
+rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+rm -f /lib/systemd/system/basic.target.wants/*;\
+rm -f /lib/systemd/system/anaconda.target.wants/*;
+ADD systemd-tmpfiles-setup.override.conf /etc/systemd/system/systemd-tmpfiles-setup.service.d/override.conf
+ADD create-users.service /etc/systemd/system/create-users.service
+RUN systemctl enable smbd create-users
 
-EXPOSE 137/udp 138/udp 139 445
+VOLUME [ "/sys/fs/cgroup" ]
+RUN ["chmod","777","/srv"]
+VOLUME ["/usr/local/samba/private/", "/srv"]
+EXPOSE 445
 
-HEALTHCHECK --interval=60s --timeout=15s \
-            CMD smbclient -L \\localhost -U % -m SMB3
-
-VOLUME ["/etc", "/var/cache/samba", "/var/lib/samba", "/var/log/samba",\
-            "/run/samba"]
-
-ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/samba.sh"]
+CMD ["/usr/sbin/init"]
