@@ -3,6 +3,8 @@ FROM alpine
 
 ENV PATH="/container/scripts:${PATH}"
 
+COPY . /container/
+
 RUN apk add --no-cache runit \
                        bash \
                        avahi \
@@ -14,13 +16,12 @@ RUN apk add --no-cache runit \
  && rm -vf /etc/avahi/services/* \
  \
  && mkdir -p /external/avahi \
- && touch /external/avahi/not-mounted
+ && touch /external/avahi/not-mounted \
+ && chmod 777 -R /container
 
 VOLUME ["/shares"]
 
 EXPOSE 139 445
-
-COPY . /container/
 
 HEALTHCHECK CMD ["sh","/container/scripts/docker-healthcheck.sh"]
 ENTRYPOINT ["sh","/container/scripts/entrypoint.sh"]
