@@ -1,15 +1,20 @@
-image: dperson/samba:latest
+image: servercontainers/samba:latest
 manifests:
-  - image: dperson/samba:amd64
+  - image: servercontainers/samba:latest-amd64
     platform:
       architecture: amd64
       os: linux
-  - image: dperson/samba:aarch64
+  - image: servercontainers/samba:latest-arm64v8
     platform:
       architecture: arm64
       os: linux
       variant: v8
-  - image: dperson/samba:armhf
+  - image: servercontainers/samba:latest-arm32v7
+    platform:
+      architecture: arm
+      os: linux
+      variant: v7
+  - image: servercontainers/samba:latest-arm32v6
     platform:
       architecture: arm
       os: linux
