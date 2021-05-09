@@ -1,6 +1,0 @@
-#!/bin/bash
-/initunixusers
-winbindd
-nmbd
-smbd
-$@
